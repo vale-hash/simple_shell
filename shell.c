@@ -8,6 +8,7 @@
 int main(int argv, char **argc)
 {
 	char *buf;
+	char *buf_copy;
 	ssize_t buf_size;
 	size_t n;
 	char *prompt;
@@ -24,8 +25,12 @@ int main(int argv, char **argc)
 		{
 			return (-1);
 		}
-
+		/*write(1, buf, buf_size);above line test if get line works*/
+		/******TOKENIZATION*******/
+		buf_copy = malloc(sizeof(char) * buf_size);
+		/*create a function that breaks the original string*/
 	}
 	free(buf);
 	return (0);
+
 }

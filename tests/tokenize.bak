@@ -1,0 +1,57 @@
+#include "shell.h"
+
+
+
+char **_tokenize(char *src, char *delim, int *num_token) 
+{
+	char **tokens = NULL;
+	char *token;
+	char *str;
+	int count = 0;
+
+    /* Allocate memory for str and copy src*/
+	str = malloc(sizeof(char) * (strlen(src) + 1));
+	if (str == NULL)
+	{
+		perror("Memory allocation failed");
+		exit(EXIT_FAILURE);
+	}
+	strcpy(str, src);
+
+    /* Count the number of tokens*/
+	token = strtok(str, delim);
+	while (token != NULL)
+	{
+		count++;
+		token = strtok(NULL, delim);
+	}
+    /* Allocate memory for the array of tokens*/
+	tokens = malloc(sizeof(char *) * (count + 1)); // +1 for NULL terminator
+	if (tokens == NULL)
+	{
+		perror("Memory allocation failed");
+		exit(EXIT_FAILURE);
+	}
+
+    /* Tokenize the string and store tokens*/
+	strcpy(str, src); /* Reset str to the original string*/
+	token = strtok(str, delim);
+	count = 0;
+	while (token != NULL)
+	{
+		tokens[count] = malloc(sizeof(char) * (strlen(token) + 1));
+		if (tokens[count] == NULL)
+		{
+			perror("Memory allocation failed");
+			exit(EXIT_FAILURE);
+		}
+	strcpy(tokens[count], token);
+	count++;
+	token = strtok(NULL, delim);
+	}
+	tokens[count] = NULL; // NULL terminator for the array of tokens
+
+	*num_token = count;
+	free(str); // Free the copied string
+	return (tokens);
+}

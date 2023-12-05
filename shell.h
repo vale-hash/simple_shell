@@ -8,5 +8,6 @@
 #include <stdio.h>
 
 int _shell(int argc, char **argv);
+char **_tokenize(char *src, char *delim, int *num_token);
 
 #endif
