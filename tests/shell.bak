@@ -1,0 +1,73 @@
+/**
+ *main - a program that mimics the bash shell
+ * @argv: total number of arguments passed in the shell
+ * @argc : poitter to an array of arguemnts passed in the shell
+ * Return: argv
+ */
+#include "shell.h"
+int main(int argc, char **argv)
+{
+	char **tokens;
+	char *buf;
+	int token_num;
+	ssize_t buf_size;
+	size_t n;
+	char *prompt;
+	bool p;
+	char *delim;
+	int i;
+	(void) argc;
+	n = 10;
+	p = true;
+	delim = " \n";
+	while (p == true)
+	{
+		prompt = "(Bshell)#";
+		write(1, prompt, 7);
+		buf_size = getline(&buf, &n, stdin);
+		if (buf_size == -1)
+		{
+			free(buf);
+			return (-1);
+		}
+		tokens = _tokenize(buf, delim, &token_num);
+		argv = malloc(sizeof(char *) * (token_num + 1));
+
+		if (argv == NULL)
+		{
+			free(buf);
+			free(argv);
+			exit(EXIT_FAILURE);
+		}
+		for (i = 0; i < token_num; i++)
+		{
+			argv[i] = malloc(sizeof(char) * (strlen(tokens[i]) + 1));
+			if (argv[i] == NULL)
+			{
+				free(buf);
+				perror("Memory allocation failed");
+				exit(EXIT_FAILURE);
+				for(i = 0; argv[i] != NULL;i++)
+				{
+					free(argv[i]);
+				}
+				free(argv);
+			}
+		strcpy(argv[i], tokens[i]);
+		}
+		argv[token_num] = NULL;
+	/*execmd(argv);
+	}
+	for(i = 0; argv[i] != NULL;i++)
+	{
+		free(argv[i]);
+	}
+	free(argv);
+	free(buf);
+	for (i = 0; tokens[i] != NULL; i++) {
+            free(tokens[i]);
+        }
+	free(tokens);*/
+	}
+	return (0);
+}

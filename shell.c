@@ -5,32 +5,83 @@
  * Return: argv
  */
 #include "shell.h"
-int main(int argv, char **argc)
-{
-	char *buf;
-	char *buf_copy;
-	ssize_t buf_size;
-	size_t n;
-	char *prompt;
-	bool p;
-	/*while statement to keep the program running*/
-	n = 10;
-	p = true;
-	while (p == true)
-	{
-		prompt = "Bshell#";
-		write(1, prompt, 7);
-		buf_size = getline(&buf, &n, stdin);
-		if (buf_size == -1)
-		{
-			return (-1);
-		}
-		/*write(1, buf, buf_size);above line test if get line works*/
-		/******TOKENIZATION*******/
-		buf_copy = malloc(sizeof(char) * buf_size);
-		/*create a function that breaks the original string*/
-	}
-	free(buf);
-	return (0);
 
+int main(int argc, char **argv) {
+    char **tokens;
+    char *buf;
+    int token_num;
+    ssize_t buf_size;
+    size_t n;
+    char *prompt;
+    bool p;
+    char *delim;
+    int i, j;
+
+	(void) argc;
+	n =10;
+	buf = NULL;
+	prompt = "(Bshell)#";
+	p = true;
+	delim = " \n";
+
+    while (p == true) {
+        write(1, prompt, 7);
+        buf_size = getline(&buf, &n, stdin);
+        if (buf_size == -1) {
+            free(buf);
+            return (-1);
+        }
+
+        tokens = _tokenize(buf, delim, &token_num);
+        if (tokens == NULL) {
+            free(buf);
+            return (-1);
+        }
+
+        argv = malloc(sizeof(char *) * (token_num + 1));
+        if (argv == NULL) {
+            perror("Memory allocation failed");
+            free(buf);
+            for (i = 0; tokens[i] != NULL; i++) {
+                free(tokens[i]);
+            }
+            free(tokens);
+            return (-1);
+        }
+
+        for (i = 0; i < token_num; i++) {
+            argv[i] = malloc(sizeof(char) * (strlen(tokens[i]) + 1));
+            if (argv[i] == NULL) {
+                perror("Memory allocation failed");
+                free(buf);
+                for ( j = 0; j < i; j++) {
+                    free(argv[j]);
+                }
+                free(argv);
+                for (i = 0; tokens[i] != NULL; i++) {
+                    free(tokens[i]);
+                }
+                free(tokens);
+                return (-1);
+            }
+            strcpy(argv[i], tokens[i]);
+        }
+        argv[token_num] = NULL;
+
+        execmd(argv);
+
+        for (i = 0; i < token_num; i++) {
+            free(argv[i]);
+        }
+        free(argv);
+
+        for (i = 0; tokens[i] != NULL; i++) {
+            free(tokens[i]);
+        }
+        free(tokens);
+    }
+
+    free(buf);
+    return (0);
 }
+

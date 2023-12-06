@@ -9,5 +9,5 @@
 
 int _shell(int argc, char **argv);
 char **_tokenize(char *src, char *delim, int *num_token);
-
+void execmd(char **argv);
 #endif
