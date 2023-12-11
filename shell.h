@@ -14,4 +14,5 @@ int execmd(char **argv);
 char ** alloctok(char *input, char **tokens, int token_num);
 void freeMem(char *buf, char **tokens, char **argv);
 char* _strchr(const char* str, int character);
+int _strcmp(char *s1, char *s2);
 #endif
