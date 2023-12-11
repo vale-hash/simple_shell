@@ -1,0 +1,48 @@
+#include "shell.h"
+/**
+ *_tokenize - function that splits commands to tokens
+ * @src:the string to be tokenized
+ * @delim: the delimeter used
+ * @num_token : the number of tokens
+ * Return: returns the tokens
+ *
+ */
+char **_tokenize(char *src, char *delim, int *num_token) {
+    char **tokens = NULL;
+    int count = 0;
+    size_t src_len = strlen(src);
+
+    // Allocate memory for token pointers.
+    tokens = malloc(sizeof(char *) * (src_len + 1));
+    if (!tokens) {
+        return NULL;
+    }
+
+    // Count tokens using strtok.
+    char *token = strtok(src, delim);
+    while (token != NULL) {
+        count++;
+        token = strtok(NULL, delim);
+    }
+
+    // Check for allocation failure.
+    if (realloc(tokens, sizeof(char *) * (count + 1)) == NULL) {
+        free(tokens);
+        return NULL;
+    }
+
+    // Copy individual tokens.
+    token = strtok(src, delim);
+    count = 0;
+    while (token != NULL) {
+        tokens[count] = token;
+        count++;
+        token = strtok(NULL, delim);
+    }
+    tokens[count] = NULL;
+
+    // Update token count and return.
+    *num_token = count;
+    return tokens;
+}
+

@@ -4,13 +4,13 @@
 
 int execmd(char **argv)
 {
+
 	int comm;
 	char *command = NULL;
 
 	if (argv != NULL)
 	{
-		command = argv[0];
-	}
+		command = argv[0]; }
 
 	comm = execve(command, argv, NULL);
 	if (comm == -1)
@@ -19,6 +19,6 @@ int execmd(char **argv)
 		return (-1);
 	}
 
-	return (0);
+return (0);
 }
 

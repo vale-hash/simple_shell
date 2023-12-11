@@ -5,13 +5,13 @@
  * Return: argv
  */
 #include "shell.h"
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	char **tokens;
-	char buf[1024] = "";
+	char *buf;
 	int token_num;
 	ssize_t buf_size;
-	/*	size_t n; */
+	size_t n;
 	char *prompt;
 	bool p;
 	char *delim;
@@ -19,29 +19,29 @@ int main(int argc, char *argv[])
 	char **alloct_res;
 	pid_t child;
 	(void) argc;
-	prompt = "(Bshell)# ";
+	buf = NULL;
+	prompt = "(Bshell)₦";
 	p = true;
 	delim = " \n";
 	while (p == true)
 	{
-		write(1, prompt, 10);
-
-		/*buf_size = getline(&buf, &n, stdin);*/
-		buf_size = read(STDIN_FILENO, buf, 1024);
-		if (buf_size == -1 || buf_size == 0)
+		write(1, prompt, 7);
+		buf_size = getline(&buf, &n, stdin);
+		if (buf_size == -1)
+		{
+			free(buf);
 			return (-1);
-
+		}
 		tokens = _tokenize(buf, delim, &token_num);
 		if(tokens == NULL)
 		{
-			/*free(buf);*/
-			return(-1);
+				free(buf);
+				return(-1);
 		}
 		alloct_res = alloctok(buf, tokens, token_num);
 		if (alloct_res == NULL)
-		{
-			free(alloct_res);
-			/*free(buf);*/
+		{	free(argv);
+			free(buf);
 			free(tokens);
 			return (-1);
 		}
@@ -52,25 +52,27 @@ int main(int argc, char *argv[])
 			if (execmd(alloct_res) == -1)
 			{
 				free(alloct_res);
-			}
-			/*
-			   else
-			   {
-			   for (i = 0; i < token_num; i++)
-			   {
-			   free(alloct_res[i]);
-			   }
-			   free(alloct_res);
-			   }
-			 */
+			} else
+			{
+				for (i = 0; i < token_num; i++)
+				{
+                free(argv[i]);
+				}
+            free(alloct_res);
+        }
 		}
 		wait(NULL);
 
-		for (i = 0; i < token_num; i++)
-			free(alloct_res[i]);
-		free(alloct_res);
-
-		/*free(buf);*/
-	}
-	return(0);
+        for (i = 0; tokens[i] != NULL; i++) {
+            free(tokens[i]);
+        }
+        free(tokens);
+    }
+	for(i = token_num; i>=0; i--)
+            {
+                    free(tokens[i]);
+			}
+    free(buf);
+    return (0);
 }
+
