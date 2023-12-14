@@ -5,6 +5,7 @@
  * Return: argv
  */
 #include "shell.h"
+#include <stdlib.h>
 int main(int argc, char *argv[])
 {
 	char **tokens;
@@ -37,19 +38,22 @@ int main(int argc, char *argv[])
 			return (-1);
 		}
 		real_path = _getloc(tokens[0]);
-		if (strcmp(real_path, tokens[0]) != 0)
+		if (strcmp(real_path, tokens[0]) != 0 || real_path[0] == '/')
 		{child = fork();
 			if (child == 0)
 				if (execve(real_path, tokens, NULL) == -1)
 					perror(argv[0]);
 			wait(NULL);
 		}
-		else
-		{ perror(argv[0]); }
+		else{
+			perror(argv[0]);
+
+		}
 		for (i = 0; i < token_num; i++)
-		{	free(tokens[i]);
+		{	/*free(tokens[i]);*/
 			tokens[i] = 0; }
 		free(tokens);
+
 		free(real_path);
 	}
 	return (0);

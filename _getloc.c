@@ -14,12 +14,12 @@ char *_getloc(char *command)
 
 	if (path)
 	{
-		path_copy = _strdup(path);
+		path_copy = strdup(path);
 		command_length = strlen(command);
 
 		path_token = _strtok(path_copy, ":");
-		if (stat(command, &buffer) == 0)
-			return (command);
+		/*if (stat(command, &buffer) == 0)
+			return (command);*/
 		while (path_token != NULL)
 		{
 			directory_length = strlen(path_token);
@@ -40,6 +40,8 @@ char *_getloc(char *command)
 				free(file_path);
 				path_token = _strtok(NULL, ":"); }
 		}
+		if (stat(command, &buffer) == 0)
+			return (command);
 		free(path_copy);
 	}
 	file_path = malloc(strlen(command) + 1);

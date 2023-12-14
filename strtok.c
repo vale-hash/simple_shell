@@ -1,4 +1,4 @@
-#include "main.h"
+#include "shell.h"
 
 /**
  * _strtok - Tokenizes a given string based in a certain delimeter.
