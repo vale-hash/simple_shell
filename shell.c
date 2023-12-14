@@ -5,11 +5,9 @@
  * Return: argv
  */
 #include "shell.h"
-#include <stdlib.h>
 int main(int argc, char *argv[])
-{
-	char **tokens;
-	char buf[1024] = "";
+{	char **tokens;
+	char buf[1024] = " ";
 	int token_num, i;
 	ssize_t buf_size;
 	char *prompt, *delim, *real_path;
@@ -34,27 +32,19 @@ int main(int argc, char *argv[])
 			return (-1);
 		tokens = _tokenize(buf, delim, &token_num);
 		if (tokens == NULL)
-		{
 			return (-1);
-		}
 		real_path = _getloc(tokens[0]);
 		if (strcmp(real_path, tokens[0]) != 0 || real_path[0] == '/')
 		{child = fork();
 			if (child == 0)
 				if (execve(real_path, tokens, NULL) == -1)
 					perror(argv[0]);
-			wait(NULL);
-		}
-		else{
-			perror(argv[0]);
-
-		}
+			wait(NULL); }
+		else
+		{ perror(argv[0]); }
 		for (i = 0; i < token_num; i++)
-		{	/*free(tokens[i]);*/
-			tokens[i] = 0; }
+		{	tokens[i] = 0; }
 		free(tokens);
-
-		free(real_path);
-	}
+		free(real_path); }
 	return (0);
 }
