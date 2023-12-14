@@ -1,8 +1,8 @@
 #include "shell.h"
 /**
- * _getloc- function to get the command path
- * @command :the command that gets inputed
- * Return:  returns the command path if it exist
+ * _getloc - function to get the path location
+ * @command: the command passed in buf
+ * Return: returns the file path if it exists
  */
 char *_getloc(char *command)
 {
@@ -11,19 +11,20 @@ char *_getloc(char *command)
 	struct stat buffer;
 
 	path = _getenv("PATH");
+
 	if (path)
 	{
-		path_copy = strdup(path);
+		path_copy = _strdup(path);
 		command_length = strlen(command);
 
-		path_token = strtok(path_copy, ":");
-
-		while (path_token)
+		path_token = _strtok(path_copy, ":");
+		if (stat(command, &buffer) == 0)
+			return (command);
+		while (path_token != NULL)
 		{
 			directory_length = strlen(path_token);
-
 			file_path = malloc(command_length + directory_length + 2);
-			strcpy(file_path, path_token);
+			_strcpy(file_path, path_token);
 			strcat(file_path, "/");
 			strcat(file_path, command);
 			strcat(file_path, "\0");
@@ -31,18 +32,19 @@ char *_getloc(char *command)
 			if (stat(file_path, &buffer) == 0)
 			{
 				free(path_copy);
-
+				free(path);
 				return (file_path);
 			}
 			else
 			{
 				free(file_path);
-				path_token = strtok(NULL, ":"); } }
+				path_token = _strtok(NULL, ":"); }
+		}
 		free(path_copy);
-
-		if (stat(command, &buffer) == 0)
-		{
-			return (command); }
-		return (NULL); }
-	return (NULL); }
+	}
+	file_path = malloc(strlen(command) + 1);
+	_strcpy(file_path, command);
+	free(path);
+	return (file_path);
+}
 

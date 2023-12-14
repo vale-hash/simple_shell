@@ -1,7 +1,12 @@
 #include "shell.h"
+/**
+ * _getenv - function to get the envriment varaible
+ * @command :the commnad we are looking ofr
+ * Return: returns the path
+ */
+
 char *_getenv(char *command)
 {
-
 	int i;
 	char *path;
 
@@ -12,7 +17,7 @@ char *_getenv(char *command)
 			path = malloc(sizeof(char *) * strlen(environ[i]));/*remember to free*/
 			if (path != NULL)
 			{
-				_strcpy(path, environ[i] + strlen(command) + 1);
+				strcpy(path, environ[i] + strlen(command) + 1);
 			}
 			else
 			{
